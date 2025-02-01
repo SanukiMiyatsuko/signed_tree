@@ -35,19 +35,11 @@ export class Scanner {
         if (this.consume("0")) {
             return Z;
         } else {
-            let list: PT[] = [];
-            const first = this.parse_principal();
-            list.push(first);
-            while (this.consume("+")) {
-                const term = this.parse_term();
-                if (term.type === "zero") {
-                    throw Error(`0は+で接続できません`);
-                } else if (term.type === "plus") {
-                    list = list.concat(term.add);
-                } else {
-                    list.push(term);
-                }
-            }
+            const list: PT[] = [];
+            do {
+                const term = this.parse_principal();
+                list.push(term);
+            } while (this.consume("+"));
             return sanitize_plus_term(list);
         }
     }
